@@ -6,6 +6,7 @@ import org.springframework.test.context.TestPropertySource;
 
 @SpringBootTest
 @TestPropertySource(properties = {
+        "llm.provider=ollama",
         "llm.ollama.base-url=http://localhost:11434"
 })
 class ChunChiApplicationTest {

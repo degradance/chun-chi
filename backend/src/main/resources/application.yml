@@ -22,11 +22,16 @@ spring:
       hibernate:
         format_sql: true
 
-# LLM (Ollama) settings
+# LLM provider settings  (ollama | lmstudio)
 llm:
+  provider: lmstudio
   ollama:
     base-url: http://localhost:11434
     model: qwen3:latest
+    timeout-seconds: 120
+  lmstudio:
+    base-url: http://localhost:1234
+    model: qwen3
     timeout-seconds: 120
 
 # CORS

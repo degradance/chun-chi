@@ -17,6 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @Transactional
 @TestPropertySource(properties = {
+        "llm.provider=ollama",
         "llm.ollama.base-url=http://localhost:11434"
 })
 class AgentControllerTest {

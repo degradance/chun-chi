@@ -14,16 +14,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LlmService {
 
-    private final OllamaClient ollamaClient;
-    private final OllamaProperties props;
+    private final LlmClient llmClient;
 
     /**
      * Single-turn generation with the specified model.
      */
     public String generate(String model, String prompt) {
-        String effectiveModel = (model != null && !model.isBlank()) ? model : props.getModel();
+        String effectiveModel = (model != null && !model.isBlank()) ? model : llmClient.defaultModel();
         log.debug("LLM generate | model={}", effectiveModel);
-        return ollamaClient.generate(effectiveModel, prompt);
+        return llmClient.generate(effectiveModel, prompt);
     }
 
     /**
@@ -37,7 +36,7 @@ public class LlmService {
      * Chat-style call with an optional system message.
      */
     public String chat(String model, String systemMessage, String userMessage) {
-        String effectiveModel = (model != null && !model.isBlank()) ? model : props.getModel();
+        String effectiveModel = (model != null && !model.isBlank()) ? model : llmClient.defaultModel();
         log.debug("LLM chat | model={}", effectiveModel);
 
         List<OllamaApi.Message> messages;
@@ -50,14 +49,13 @@ public class LlmService {
             messages = List.of(new OllamaApi.Message("user", userMessage));
         }
 
-        return ollamaClient.chat(effectiveModel, messages);
+        return llmClient.chat(effectiveModel, messages);
     }
 
     /**
-     * Returns the list of locally available Ollama models.
+     * Returns the list of models available on the active LLM backend.
      */
     public List<OllamaApi.ModelInfo> listAvailableModels() {
-        OllamaApi.TagsResponse tags = ollamaClient.listModels();
-        return tags != null ? tags.models() : List.of();
+        return llmClient.listModels();
     }
 }

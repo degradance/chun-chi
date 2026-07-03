@@ -1,15 +1,16 @@
 # Chun-Chi — LLM Agent Harness
 
-A web GUI for managing local LLM agents powered by **qwen3** (via [Ollama](https://ollama.com)).  
+A web GUI for managing local LLM agents powered by **qwen3** (via [Ollama](https://ollama.com) or [LM Studio](https://lmstudio.ai)).  
 Built with **Vue 3** (frontend) and **Spring Boot 3** (backend).
 
 ## Features
 
 - 🤖 **Agent management** — create, configure, pause, resume, and stop LLM agents
 - 🔄 **Agent cycle tracking** — run prompt→response cycles and browse full history
-- 💬 **Direct LLM chat** — send messages to any locally available Ollama model
+- 💬 **Direct LLM chat** — send messages to any locally available model
 - 📊 **Dashboard** — real-time overview of agent statuses
 - 🗂 **OpenAPI / Swagger UI** — interactive API docs at `http://localhost:8080/swagger-ui.html`
+- 🔌 **Pluggable LLM backend** — switch between Ollama and LM Studio with a single config value
 
 ## Architecture
 
@@ -37,10 +38,12 @@ chun-chi/
 
 - Java 21+
 - Node.js 22+
-- [Ollama](https://ollama.com) running locally with the qwen3 model pulled:
-  ```bash
-  ollama pull qwen3:latest
-  ```
+- One of:
+  - **[Ollama](https://ollama.com)** running locally with the qwen3 model pulled:
+    ```bash
+    ollama pull qwen3:latest
+    ```
+  - **[LM Studio](https://lmstudio.ai)** running locally with the qwen3 model loaded and the local server started (default port 1234)
 
 ### Run locally (development)
 
@@ -103,11 +106,19 @@ Backend configuration is in `backend/src/main/resources/application.yml`:
 
 ```yaml
 llm:
+  provider: lmstudio        # ollama | lmstudio
   ollama:
-    base-url: http://localhost:11434   # Ollama endpoint
-    model: qwen3:latest                # Default model
+    base-url: http://localhost:11434
+    model: qwen3:latest
+    timeout-seconds: 120
+  lmstudio:
+    base-url: http://localhost:1234
+    model: qwen3
     timeout-seconds: 120
 ```
+
+Set `llm.provider` to `lmstudio` to use LM Studio (OpenAI-compatible API) or `ollama` to use Ollama.
+Each provider reads its own sub-section for `base-url`, `model`, and `timeout-seconds`.
 
 Frontend env in `frontend/.env`:
 ```

@@ -2,6 +2,7 @@ package com.chunchi.llm;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -10,12 +11,13 @@ import java.time.Duration;
 import java.util.List;
 
 /**
- * Low-level HTTP client wrapping the Ollama REST API.
+ * LlmClient implementation that wraps the Ollama REST API.
  */
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class OllamaClient {
+@ConditionalOnProperty(name = "llm.provider", havingValue = "ollama", matchIfMissing = true)
+public class OllamaClient implements LlmClient {
 
     private final WebClient ollamaWebClient;
     private final OllamaProperties props;
@@ -23,6 +25,7 @@ public class OllamaClient {
     /**
      * Calls /api/generate (single-turn, non-streaming).
      */
+    @Override
     public String generate(String model, String prompt) {
         OllamaApi.GenerateRequest body = new OllamaApi.GenerateRequest(model, prompt, false);
         OllamaApi.GenerateResponse response = ollamaWebClient.post()
@@ -42,6 +45,7 @@ public class OllamaClient {
     /**
      * Calls /api/chat (multi-turn, non-streaming).
      */
+    @Override
     public String chat(String model, List<OllamaApi.Message> messages) {
         OllamaApi.ChatRequest body = new OllamaApi.ChatRequest(model, messages, false);
         OllamaApi.ChatResponse response = ollamaWebClient.post()
@@ -61,8 +65,9 @@ public class OllamaClient {
     /**
      * Lists locally available models via /api/tags.
      */
-    public OllamaApi.TagsResponse listModels() {
-        return ollamaWebClient.get()
+    @Override
+    public List<OllamaApi.ModelInfo> listModels() {
+        OllamaApi.TagsResponse tags = ollamaWebClient.get()
                 .uri("/api/tags")
                 .retrieve()
                 .bodyToMono(OllamaApi.TagsResponse.class)
@@ -72,5 +77,11 @@ public class OllamaClient {
                     return Mono.just(new OllamaApi.TagsResponse(List.of()));
                 })
                 .block();
+        return tags != null ? tags.models() : List.of();
+    }
+
+    @Override
+    public String defaultModel() {
+        return props.getModel();
     }
 }
