@@ -1,0 +1,20 @@
+# Build output
+target/
+
+# Maven
+.mvn/repository/
+*.class
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
