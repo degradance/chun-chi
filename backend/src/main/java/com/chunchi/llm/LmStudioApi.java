@@ -4,7 +4,7 @@ import java.util.List;
 
 /**
  * Request / response records for the LM Studio OpenAI-compatible HTTP API.
- * See: https://lmstudio.ai/docs/app/api/endpoints/openai
+ * See: https://lmstudio.ai/docs/api
  */
 public final class LmStudioApi {
 

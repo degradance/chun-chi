@@ -66,6 +66,8 @@ npm run dev
 
 ### Run with Docker Compose
 
+> **Note:** The Docker Compose setup bundles Ollama. Set `llm.provider: ollama` in `application.yml` (or pass `LLM_PROVIDER=ollama` as an env variable) before building the image.
+
 ```bash
 docker-compose up --build
 ```

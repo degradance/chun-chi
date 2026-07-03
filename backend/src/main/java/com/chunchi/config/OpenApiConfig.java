@@ -14,7 +14,7 @@ public class OpenApiConfig {
         return new OpenAPI()
                 .info(new Info()
                         .title("Chun-Chi – LLM Agent Harness API")
-                        .description("REST API for managing local LLM agents and their execution cycles (qwen3 / Ollama)")
+                        .description("REST API for managing local LLM agents and their execution cycles (qwen3 via Ollama or LM Studio)")
                         .version("0.1.0")
                         .license(new License().name("MIT")));
     }
