@@ -1,0 +1,6 @@
+/* Minimal base reset - layout and tokens are in App.vue */
+html { scroll-behavior: smooth; }
+h1, h2, h3 { margin: 0 0 0.5rem; font-weight: 700; }
+h1 { font-size: 1.6rem; }
+h2 { font-size: 1.2rem; }
+a { color: #3b82f6; }
